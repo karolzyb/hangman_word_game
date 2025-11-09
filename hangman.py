@@ -1,41 +1,53 @@
 import random
 
-wordsFile = open('longWords.txt').read().splitlines()
-wordToGuess = random.choice(wordsFile).upper()
-# wordToGuess = input("Pass a word to be guessed: ").upper()
+"""
+Function containing main logic of the hangman game.
+"""
 
-signList = ['_' for i in wordToGuess]
-isWin = False
-wrongGuessCounter = 0
-totalPossibleAttempts = 10
+def hangman():
 
-print(f"Word to be guessed: ")
-print(signList)
+    #wordsFile = open('longWords.txt').read().splitlines()
+    try:
+        with open('longWords.txt', 'r') as f:
+            words = [w.strip() for w in f if w.strip()]
+    except FileNotFoundError:
+        print("File 'longWords.txt' not found.")
+        return
 
-while (isWin == False and wrongGuessCounter < totalPossibleAttempts):
+    if not words:
+        print("No words in 'longWords.txt'.")
+        return
 
-    letterGuess = input("Pass a letter: ").upper()[0]
+    word_to_guess = random.choice(words).upper()
+    sign_list = ['_' for i in word_to_guess]
+    wrong_guess_counter = 0
+    max_attempts = 10
 
-    if letterGuess in signList:
-        print(f"Letter already guessed.")
-        print(signList)
-        continue
+    print(f"Word to be guessed: ")
+    print(' '.join(sign_list))
 
-    lengthOfWord = len(wordToGuess)
-    for i in range(lengthOfWord):
-        if wordToGuess[i] == letterGuess:
-            signList[i] = letterGuess
+    while '_' in sign_list and wrong_guess_counter < max_attempts:
+        letter_guess = input("Pass a letter: ").upper()[0]
+
+        if letter_guess in sign_list:
+            print(f"Letter already guessed.")
+            print(' '.join(sign_list))
             continue
-    if not letterGuess in wordToGuess:
-            wrongGuessCounter += 1
-            print(f"Wrong guess. Remaining wrong guesses: {totalPossibleAttempts - wrongGuessCounter}.")
-    print(signList)
 
-    if not '_' in signList:
-        isWin = True
-        print(f"Congrats, you've won!")
+        for i in range(len(word_to_guess)):
+            if word_to_guess[i] == letter_guess:
+                sign_list[i] = letter_guess
+                continue
+        if not letter_guess in word_to_guess:
+                wrong_guess_counter += 1
+                print(f"Wrong guess. Remaining attempts: {max_attempts - wrong_guess_counter}.")
+        print(' '.join(sign_list))
 
-    if wrongGuessCounter == totalPossibleAttempts:
-        print(f"You've lost, too many incorrect guesses.")
+        if not '_' in sign_list:
+            print(f"Congrats, you've won!")
 
-print(wordToGuess)
+        if wrong_guess_counter == max_attempts:
+            print(f"You've lost, too many incorrect guesses.")
+            print(f"The word was: {word_to_guess}")
+
+    print(word_to_guess)
