@@ -6,7 +6,6 @@ Function containing main logic of the hangman game.
 
 def hangman():
 
-    #wordsFile = open('longWords.txt').read().splitlines()
     try:
         with open('longWords.txt', 'r') as f:
             words = [w.strip() for w in f if w.strip()]

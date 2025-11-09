@@ -20,9 +20,7 @@ def filter_words():
             print("\nCanceled by user.")
             return
 
-    with open('words.txt', 'r') as wordsFile, open('longWords.txt', 'w') as longWordsFile:
-        for i in wordsFile:
+    with open('words.txt', 'r') as words_file, open('longWords.txt', 'w') as long_words_file:
+        for i in words_file:
             if len(i.strip()) >= min_len:
-                longWordsFile.write(i)
-
-    print(f'Minimal word lenght selected: {min_len} characters.')
+                long_words_file.write(i)
